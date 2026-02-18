@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnimeVerse Gallery | Kawaii & Modern</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body class="anime-theme">
+    <!-- Gimmick: Loading Screen -->
+    <div id="loader" class="loader-wrapper">
+        <div class="loader-content">
+            <div class="anime-spinner"></div>
+            <p>Loading Kawaii Vibes...</p>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-bolt"></i> Anime<span>Verse</span>
+        </div>
+        <div class="nav-links">
+            <button id="homeBtn" class="active"><i class="fas fa-home"></i></button>
+            <button id="themeToggle"><i class="fas fa-palette"></i></button>
+        </div>
+    </nav>
+
+    <!-- Page 1: Discovery -->
+    <main id="page-discovery" class="page active">
+        <header class="hero">
+            <h1>Explore Your <span>Anime</span> World</h1>
+            <p>Find, Filter, and Enjoy the best anime art collection.</p>
+        </header>
+
+        <section class="controls">
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search title, author, or tags...">
+                <i class="fas fa-search"></i>
+            </div>
+            <div class="filter-tags" id="tagContainer">
+                <!-- Tags injected by JS -->
+            </div>
+        </section>
+
+        <section class="gallery-grid" id="galleryGrid">
+            <!-- Cards injected by JS -->
+        </section>
+    </main>
+
+    <!-- Page 2: Detail View -->
+    <main id="page-detail" class="page">
+        <div class="detail-container">
+            <button class="back-btn" id="backBtn"><i class="fas fa-arrow-left"></i> Back</button>
+            <div class="detail-content">
+                <div class="detail-image-wrapper">
+                    <img id="detailImage" src="" alt="Detail Image">
+                </div>
+                <div class="detail-info">
+                    <h2 id="detailTitle">Title</h2>
+                    <div class="detail-meta">
+                        <span id="detailAuthor"></span>
+                        <div id="detailTags" class="tags"></div>
+                    </div>
+                    <div class="detail-text-box">
+                        <h3><i class="fas fa-quote-left"></i> The Story</h3>
+                        <p id="detailNarrative"></p>
+                        <hr style="margin: 15px 0; opacity: 0.2;">
+                        <p id="detailText" class="sub-text"></p>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn-gimmick" onclick="alert('Arigato! Image Liked!')"><i class="fas fa-heart"></i> Like</button>
+                        <button class="btn-gimmick" onclick="alert('Saved to your heart!')"><i class="fas fa-download"></i> Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Gimmick: Floating Action Button -->
+    <div class="fab" id="scrollTop">
+        <i class="fas fa-chevron-up"></i>
+    </div>
+
+    <!-- Gimmick: Music Player (Visual Only) -->
+    <div class="music-widget">
+        <div class="music-info">
+            <marquee>Now Playing: Blue Bird - Naruto Shippuden</marquee>
+        </div>
+        <div class="music-controls">
+            <i class="fas fa-play"></i>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+
