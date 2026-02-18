@@ -36,13 +36,16 @@
         </header>
 
         <section class="controls">
-            <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="Search title, author, or tags...">
-                <i class="fas fa-search"></i>
+            <div class="search-bar-container">
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Search title or author...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <button id="filterBtn" class="filter-trigger-btn">
+                    <i class="fas fa-filter"></i> Filter
+                </button>
             </div>
-            <div class="filter-tags" id="tagContainer">
-                <!-- Tags injected by JS -->
-            </div>
+            <div id="activeFilters" class="active-filters-display"></div>
         </section>
 
         <section class="gallery-grid" id="galleryGrid">
@@ -70,32 +73,34 @@
                         <hr style="margin: 15px 0; opacity: 0.2;">
                         <p id="detailText" class="sub-text"></p>
                     </div>
-                    <div class="action-buttons">
-                        <button class="btn-gimmick" onclick="alert('Arigato! Image Liked!')"><i class="fas fa-heart"></i> Like</button>
-                        <button class="btn-gimmick" onclick="alert('Saved to your heart!')"><i class="fas fa-download"></i> Save</button>
-                    </div>
                 </div>
             </div>
         </div>
     </main>
+
+    <!-- Filter Modal -->
+    <div id="filterModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Select Tags</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div id="tagChecklist" class="tag-checklist">
+                <!-- Checkboxes injected by JS -->
+            </div>
+            <div class="modal-footer">
+                <button id="resetFilters" class="btn-secondary">Reset</button>
+                <button id="applyFilters" class="btn-primary">Apply Filter</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Gimmick: Floating Action Button -->
     <div class="fab" id="scrollTop">
         <i class="fas fa-chevron-up"></i>
     </div>
 
-    <!-- Gimmick: Music Player (Visual Only) -->
-    <div class="music-widget">
-        <div class="music-info">
-            <marquee>Now Playing: Blue Bird - Naruto Shippuden</marquee>
-        </div>
-        <div class="music-controls">
-            <i class="fas fa-play"></i>
-        </div>
-    </div>
-
     <script src="data.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
-
