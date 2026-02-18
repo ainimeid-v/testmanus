@@ -1,15 +1,23 @@
 document.addEventListener('DOMContentLoaded', () => {
     const loader = document.getElementById('loader');
     const galleryGrid = document.getElementById('galleryGrid');
-    const tagContainer = document.getElementById('tagContainer');
     const searchInput = document.getElementById('searchInput');
     const pageDiscovery = document.getElementById('page-discovery');
     const pageDetail = document.getElementById('page-detail');
     const backBtn = document.getElementById('backBtn');
+    const homeBtn = document.getElementById('homeBtn');
     const themeToggle = document.getElementById('themeToggle');
     const scrollTop = document.getElementById('scrollTop');
+    
+    const filterBtn = document.getElementById('filterBtn');
+    const filterModal = document.getElementById('filterModal');
+    const closeModal = document.querySelector('.close-modal');
+    const tagChecklist = document.getElementById('tagChecklist');
+    const applyFilters = document.getElementById('applyFilters');
+    const resetFilters = document.getElementById('resetFilters');
+    const activeFiltersDisplay = document.getElementById('activeFilters');
 
-    let currentFilter = 'All';
+    let selectedTags = [];
 
     // Loader Gimmick
     setTimeout(() => {
@@ -20,6 +28,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Render Gallery
     function renderGallery(data) {
         galleryGrid.innerHTML = '';
+        if (data.length === 0) {
+            galleryGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 20px;">No images found...</p>';
+            return;
+        }
         data.forEach(item => {
             const card = document.createElement('div');
             card.className = 'card';
@@ -35,39 +47,69 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Render Tags
-    function renderTags() {
-        const allTags = ['All', ...new Set(galleryData.flatMap(item => item.tags))];
-        tagContainer.innerHTML = '';
+    // Initialize Filter Modal
+    function initFilterModal() {
+        const allTags = [...new Set(galleryData.flatMap(item => item.tags))];
+        tagChecklist.innerHTML = '';
         allTags.forEach(tag => {
-            const tagEl = document.createElement('span');
-            tagEl.className = `tag ${tag === currentFilter ? 'active' : ''}`;
-            tagEl.textContent = tag;
-            tagEl.onclick = () => {
-                currentFilter = tag;
-                document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
-                tagEl.classList.add('active');
-                filterGallery();
-            };
-            tagContainer.appendChild(tagEl);
+            const label = document.createElement('label');
+            label.className = 'check-item';
+            label.innerHTML = `
+                <input type="checkbox" value="${tag}" ${selectedTags.includes(tag) ? 'checked' : ''}>
+                <span>${tag}</span>
+            `;
+            tagChecklist.appendChild(label);
         });
     }
 
-    // Search & Filter
-    function filterGallery() {
+    // Filter Logic
+    function performFilter() {
         const searchTerm = searchInput.value.toLowerCase();
         const filtered = galleryData.filter(item => {
             const matchesSearch = item.title.toLowerCase().includes(searchTerm) || 
-                                 item.tags.some(t => t.toLowerCase().includes(searchTerm));
-            const matchesTag = currentFilter === 'All' || item.tags.includes(currentFilter);
-            return matchesSearch && matchesTag;
+                                 item.author.toLowerCase().includes(searchTerm);
+            const matchesTags = selectedTags.length === 0 || selectedTags.every(tag => item.tags.includes(tag));
+            return matchesSearch && matchesTags;
         });
         renderGallery(filtered);
+        updateActiveFiltersUI();
     }
 
-    searchInput.oninput = filterGallery;
+    function updateActiveFiltersUI() {
+        activeFiltersDisplay.innerHTML = selectedTags.map(tag => `
+            <span class="active-tag">${tag}</span>
+        `).join('');
+    }
 
-    // Navigation to Detail
+    // Modal Events
+    filterBtn.onclick = () => {
+        initFilterModal();
+        filterModal.classList.add('active');
+    };
+
+    closeModal.onclick = () => filterModal.classList.remove('active');
+    
+    window.onclick = (event) => {
+        if (event.target == filterModal) filterModal.classList.remove('active');
+    };
+
+    applyFilters.onclick = () => {
+        const checkboxes = tagChecklist.querySelectorAll('input[type="checkbox"]:checked');
+        selectedTags = Array.from(checkboxes).map(cb => cb.value);
+        performFilter();
+        filterModal.classList.remove('active');
+    };
+
+    resetFilters.onclick = () => {
+        const checkboxes = tagChecklist.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(cb => cb.checked = false);
+        selectedTags = [];
+        performFilter();
+    };
+
+    searchInput.oninput = performFilter;
+
+    // Navigation
     function showDetail(item) {
         document.getElementById('detailImage').src = item.image;
         document.getElementById('detailTitle').textContent = item.title;
@@ -76,17 +118,23 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('detailText').textContent = item.text;
         
         const tagsEl = document.getElementById('detailTags');
-        tagsEl.innerHTML = item.tags.map(t => `<span class="tag" style="margin-right:5px">${t}</span>`).join('');
+        tagsEl.innerHTML = item.tags.map(t => `<span class="tag">${t}</span>`).join('');
 
         pageDiscovery.classList.remove('active');
         pageDetail.classList.add('active');
+        homeBtn.classList.remove('active');
         window.scrollTo(0, 0);
     }
 
-    backBtn.onclick = () => {
+    function goToHome() {
         pageDetail.classList.remove('active');
         pageDiscovery.classList.add('active');
-    };
+        homeBtn.classList.add('active');
+        window.scrollTo(0, 0);
+    }
+
+    backBtn.onclick = goToHome;
+    homeBtn.onclick = goToHome;
 
     // Theme Toggle
     themeToggle.onclick = () => {
@@ -102,7 +150,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     scrollTop.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    // Init
+    // Initial Render
     renderGallery(galleryData);
-    renderTags();
 });
